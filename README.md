@@ -22,11 +22,6 @@ You can download the Android app by clicking the link below.
   
 ### IPv4 Address calc
 
-
-
-![Image 1: ](scrnshots/scrnshot1.jpg)
-  
-  
   
 
 ![Image 2: ](scrnshots/scrnshot2.jpg)
@@ -35,10 +30,4 @@ You can download the Android app by clicking the link below.
 ### URL to IP  
   
   
-
-![Image 3: ](scrnshots/scrnshot5.jpg)
-
-
-
-
 ![Image 4: ](scrnshots/scrnshot4.jpg)
