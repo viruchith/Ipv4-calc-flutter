@@ -1,7 +1,7 @@
 # IPv4 Address Calculator App
 
 A Simple Flutter application to calculate
--  Network IP,Broadcast IP
+- Network IP,Broadcast IP
 - First usable IP
 - Last Usable IP
 - Prefix
@@ -41,4 +41,4 @@ You can download the Android app by clicking the link below.
 
 
 
-![Image 1: ](scrnshots/scrnshot3.jpg)
+![Image 1: ](scrnshots/scrnshot4.jpg)
