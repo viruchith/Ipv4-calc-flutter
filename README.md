@@ -36,7 +36,7 @@ You can download the Android app by clicking the link below.
   
   
 
-![Image 1: ](scrnshots/scrnshot3.jpg)
+![Image 1: ](scrnshots/scrnshot5.jpg)
 
 
 
