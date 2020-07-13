@@ -1,42 +1,69 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'calc.dart';
 
 void main() {
-  runApp(
-    MaterialApp(
+  runApp(AppTabBar());
+}
+
+
+class AppTabBar extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
       debugShowCheckedModeBanner:false,
-      home: Scaffold(
-        backgroundColor: Colors.black12,
-        appBar: AppBar(
-          centerTitle: true,
-          leading:null,
-          title:Row(
+      home: DefaultTabController(
+        length:2,
+        child: Scaffold(
+          backgroundColor: Colors.black12,
+          appBar: AppBar(
+            centerTitle: true,
+            leading:null,
+            bottom:TabBar(
+                tabs:[
+                  Tab(
+                    icon:FaIcon(FontAwesomeIcons.networkWired,size:25,color: Colors.black,),
+                  ),
+                  Tab(
+                    icon:FaIcon(FontAwesomeIcons.globe,size:25,color: Colors.black,),
+                  )
+                ] ),
+            title:Row(
+              children: <Widget>[
+                Text('IPv4 Address Calc',
+                  style:TextStyle(
+                      fontSize: 27,
+                      fontFamily: "Inconsolata",
+                      fontWeight: FontWeight.bold,
+                      color: Colors.black
+                  ),),
+                SizedBox(
+                  width:25.0,
+                ),
+                FaIcon(FontAwesomeIcons.networkWired,color: Colors.black,size:30,),
+              ],
+            ),
+            backgroundColor: Colors.white60,
+
+          ),
+          body:TabBarView(
             children: <Widget>[
-              Text('IPv4 Address Calc',
-              style:TextStyle(
-                fontSize: 27,
-                fontFamily: "Inconsolata",
-                fontWeight: FontWeight.bold,
-                color: Colors.black
-              ),),
-              SizedBox(
-                width:25.0,
-              ),
-              FaIcon(FontAwesomeIcons.networkWired,color: Colors.black,size:30,),
+              SingleChildScrollView(
+                  child: ConstrainedBox(
+                      constraints:BoxConstraints(),
+                      child: Home())),
+              SingleChildScrollView(
+                  child: ConstrainedBox(
+                      constraints:BoxConstraints(),
+                      child: AddressToIp())),
             ],
           ),
-          backgroundColor: Colors.white60,
-
         ),
-      body:SingleChildScrollView(
-          child:ConstrainedBox(
-              constraints:BoxConstraints() ,
-              child: Home())),
       ),
-    ),
-  );
+    ) ;
+  }
 }
 
 
@@ -66,9 +93,11 @@ class _HomeState extends State<Home> {
 
  RegExp ipPattern = new RegExp(r"^(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)");
 
+
  bool validateIp(String ip){
    return ipPattern.hasMatch(ip);
  }
+
 
  @override
   Widget build(BuildContext context) {
@@ -303,3 +332,146 @@ class _HomeState extends State<Home> {
   }
 }
 
+class AddressToIp extends StatefulWidget {
+  @override
+  _AddressToIpState createState() => _AddressToIpState();
+}
+
+class _AddressToIpState extends State<AddressToIp> {
+
+  String _domain_ip = '0.0.0';
+
+  final _text1 = TextEditingController();
+
+  bool _validate1 = true;
+
+  String _ermsg = '';
+
+  RegExp _pattern = new RegExp(r'[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)');
+
+  //void getIp() async{
+
+//}
+
+
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+      child:Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          mainAxisAlignment:MainAxisAlignment.center,
+          children: <Widget>[
+            Container(
+              child:Text('URL --> IP',
+              style:TextStyle(
+                fontFamily: "Inconsolata",
+                fontSize: 25,
+                color: Colors.white
+              ),),
+            ),
+            SizedBox(
+              height:20,
+            ),
+            TextField(
+              maxLength:30,
+              controller: _text1,
+              style: TextStyle(
+                  fontFamily: "Inconsolata",
+                  color: Colors.green,
+                  fontSize:20
+              ),
+              decoration:InputDecoration(
+                hintText:'www.example.com',
+                hintStyle:TextStyle(
+                    fontFamily: "Inconsolata",
+                    color: Colors.greenAccent
+                ),
+                labelStyle:TextStyle(
+                  fontFamily: "Inconsolata",
+                  color:Colors.blue,
+                ),
+                enabledBorder: OutlineInputBorder(
+                    borderSide: BorderSide(color:Colors.white,style:BorderStyle.solid)
+                ),
+                labelText:'Enter web address',
+                errorText:_validate1?null: _ermsg,
+              ),
+            ),
+            SizedBox(
+              height:20,
+            ),
+            Text('IP : $_domain_ip',
+              style:TextStyle(
+                  fontSize:23,
+                  color: Colors.green,
+                  fontFamily:'Inconsolata'
+              ),),
+            SizedBox(
+              height:20,
+            ),
+            RaisedButton(
+
+                onPressed:()async{
+                  _validate1 = true;
+                  _domain_ip = '0.0.0.0';
+                  if(_text1.text.isEmpty){
+                    _ermsg = 'cannot be empty' ;
+                    _validate1 = false;
+                  }
+                  else if(_pattern.hasMatch(_text1.text)){
+
+                    try{
+                      //var stream = await ping(_text1.text,times:5);
+                      final result = await InternetAddress.lookup(_text1.text);
+                      if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) {
+                        print('connected');
+                        print(result[0].address);
+                        _domain_ip = result[0].address;
+                      }else{
+                        _validate1 = false;
+                        _ermsg = 'Invalid url !' ;
+                      }
+                    }on SocketException catch(_){
+                      _validate1 = false;
+                      _ermsg = 'try again !' ;
+                      print('Eroor........');
+                    }
+
+
+                  }else{
+                    _ermsg = 'address format : www.example.domain';
+                    _validate1 = false;
+                  }
+                  setState(() {
+
+                    print('Entered state');
+
+                  });
+
+                },
+              color:Colors.green,
+              child:FaIcon(
+                FontAwesomeIcons.search,
+                size:25,
+                color:Colors.white,
+              ),
+            ),
+            SizedBox(
+              height: 20,
+            ),
+            Center(
+              child: Text('Check internet connectivity before using',
+                  style:TextStyle(
+                  fontSize:15,
+                  color: Colors.yellowAccent,
+                  fontFamily:'Inconsolata'
+              ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
