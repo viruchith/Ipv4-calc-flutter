@@ -9,7 +9,7 @@ A Simple Flutter application to calculate
    
 for a given Ipv4 Address and Subnet Mask.
 
-- URL to IP conversionfeature  is also available .
+- URL to IP conversion feature  is also available .
 
 ## Getting Started
 
