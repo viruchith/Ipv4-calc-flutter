@@ -24,10 +24,15 @@ You can download the Android app by clicking the link below.
 
   
 
-![Image 2: ](scrnshots/scrnshot2.jpg)
+![Image 2: ](https://drive.google.com/file/d/12OdCr9Pe0zPEo5wHah04qJKsehfywpOw/view?usp=sharing)
   
   
 ### URL to IP  
   
   
-![Image 4: ](scrnshots/scrnshot4.jpg)
+![Image 4: ](https://drive.google.com/file/d/12nKQw0nm1JOnpfivTUdn05G46MaXPluE/view?usp=sharing)
+
+
+### Wifi info
+
+![Image 5: ](https://drive.google.com/file/d/15x3Ti_YNQ1Taf9td5su5CYOBV_ItGTvz/view?usp=sharing)

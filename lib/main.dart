@@ -1,8 +1,11 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:wifi_info_plugin/wifi_info_plugin.dart';
 import 'calc.dart';
+
 
 void main() {
   runApp(AppTabBar());
@@ -15,7 +18,7 @@ class AppTabBar extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner:false,
       home: DefaultTabController(
-        length:2,
+        length:3,
         child: Scaffold(
           backgroundColor: Colors.black12,
           appBar: AppBar(
@@ -28,6 +31,9 @@ class AppTabBar extends StatelessWidget {
                   ),
                   Tab(
                     icon:FaIcon(FontAwesomeIcons.globe,size:25,color: Colors.black,),
+                  ),
+                  Tab(
+                    icon:FaIcon(FontAwesomeIcons.wifi,size:25,color: Colors.black,)
                   )
                 ] ),
             title:Row(
@@ -42,7 +48,7 @@ class AppTabBar extends StatelessWidget {
                 SizedBox(
                   width:25.0,
                 ),
-                FaIcon(FontAwesomeIcons.networkWired,color: Colors.black,size:30,),
+                FaIcon(FontAwesomeIcons.networkWired,color:Colors.black,size:27),
               ],
             ),
             backgroundColor: Colors.white60,
@@ -58,6 +64,10 @@ class AppTabBar extends StatelessWidget {
                   child: ConstrainedBox(
                       constraints:BoxConstraints(),
                       child: AddressToIp())),
+              SingleChildScrollView(
+                  child: ConstrainedBox(
+                      constraints:BoxConstraints(),
+                      child: WifiInfo())),
             ],
           ),
         ),
@@ -411,7 +421,9 @@ class _AddressToIpState extends State<AddressToIp> {
               height:20,
             ),
             RaisedButton(
-
+              shape:RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10)
+              ),
                 onPressed:()async{
                   _validate1 = true;
                   _domain_ip = '0.0.0.0';
@@ -422,7 +434,6 @@ class _AddressToIpState extends State<AddressToIp> {
                   else if(_pattern.hasMatch(_text1.text)){
 
                     try{
-                      //var stream = await ping(_text1.text,times:5);
                       final result = await InternetAddress.lookup(_text1.text);
                       if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) {
                         print('connected');
@@ -471,6 +482,240 @@ class _AddressToIpState extends State<AddressToIp> {
             ),
           ],
         ),
+      ),
+    );
+  }
+}
+
+
+class WifiInfo extends StatefulWidget {
+  @override
+  _WifiInfoState createState() => _WifiInfoState();
+}
+
+class _WifiInfoState extends State<WifiInfo> {
+
+  String _ipAddress='0.0.0.0',_routerIp='0.0.0.0',_macAddress='NA',_dns1='0.0.0.0',_dns2='0.0.0.0',_ssid='NA',_frequency='0',_connectionType='NA',_bssid='NA',_linkspeed='0';
+  WifiInfoWrapper _wifiObject;
+
+
+  @override
+  void initState() {
+    super.initState();
+    initPlatformState();
+  }
+
+  // Platform messages are asynchronous, so we initialize in an async method.
+  Future<void> initPlatformState() async {
+    WifiInfoWrapper wifiObject;
+    // Platform messages may fail, so we use a try/catch PlatformException.
+    try {
+      wifiObject = await  WifiInfoPlugin.wifiDetails;
+
+    }
+    on PlatformException{
+
+    }
+    if (!mounted) return;
+
+    setState(() {
+
+      _wifiObject = wifiObject;
+    });
+  }
+
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          Column(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              Text('IP : '+_ipAddress,
+                style:TextStyle(
+                    fontSize:23,
+                    color: Colors.green,
+                    fontFamily:'Inconsolata'
+                ),),
+              SizedBox(
+                height:10,
+              ),
+              Container(
+                width:double.maxFinite,
+                height:2,
+                color:Colors.white70,
+              ),
+              Text('Gateway : '+_routerIp,
+                style:TextStyle(
+                    fontSize:23,
+                    color: Colors.green,
+                    fontFamily:'Inconsolata'
+                ),),
+              SizedBox(
+                height:10,
+              ),
+              Container(
+                width:double.maxFinite,
+                height:2,
+                color:Colors.white70,
+              ),
+              Text('MacAddress : '+_macAddress,
+                style:TextStyle(
+                    fontSize:23,
+                    color: Colors.green,
+                    fontFamily:'Inconsolata'
+                ),),
+              SizedBox(
+                height:10,
+              ),
+              Container(
+                width:double.maxFinite,
+                height:2,
+                color:Colors.white70,
+              ),
+              Text('DNS 1 : '+_dns1,
+                style:TextStyle(
+                    fontSize:23,
+                    color: Colors.green,
+                    fontFamily:'Inconsolata'
+                ),),
+              SizedBox(
+                height:10,
+              ),
+              Container(
+                width:double.maxFinite,
+                height:2,
+                color:Colors.white70,
+              ),
+              Text('DNS 2 : '+_dns2,
+                style:TextStyle(
+                    fontSize:23,
+                    color: Colors.green,
+                    fontFamily:'Inconsolata'
+                ),),
+              SizedBox(
+                height:10,
+              ),
+              Container(
+                width:double.maxFinite,
+                height:2,
+                color:Colors.white70,
+              ),
+              Text('BSSID : '+_bssid,
+                style:TextStyle(
+                    fontSize:23,
+                    color: Colors.green,
+                    fontFamily:'Inconsolata'
+                ),),
+              SizedBox(
+                height:10,
+              ),
+              Container(
+                width:double.maxFinite,
+                height:2,
+                color:Colors.white70,
+              ),
+              Text('SSID : '+_ssid,
+                style:TextStyle(
+                    fontSize:23,
+                    color: Colors.green,
+                    fontFamily:'Inconsolata'
+                ),),
+              SizedBox(
+                height:10,
+              ),
+              Container(
+                width:double.maxFinite,
+                height:2,
+                color:Colors.white70,
+              ),
+              Text('Connection type : '+_connectionType,
+                style:TextStyle(
+                    fontSize:23,
+                    color: Colors.green,
+                    fontFamily:'Inconsolata'
+                ),),
+              SizedBox(
+                height:10,
+              ),
+              Container(
+                width:double.maxFinite,
+                height:2,
+                color:Colors.white70,
+              ),
+              Text('Frequency : '+_frequency+' MHz',
+                style:TextStyle(
+                    fontSize:23,
+                    color: Colors.green,
+                    fontFamily:'Inconsolata'
+                ),),
+              SizedBox(
+                height:10,
+              ),
+              Container(
+                width:double.maxFinite,
+                height:2,
+                color:Colors.white70,
+              ),
+              Text('Speed : '+_linkspeed+' Kbps',
+                style:TextStyle(
+                    fontSize:23,
+                    color: Colors.green,
+                    fontFamily:'Inconsolata'
+                ),),
+            ],
+          ),
+          SizedBox(
+            height:10,
+          ),
+          Container(
+            width:double.maxFinite,
+            height:2,
+            color:Colors.white70,
+          ),
+        SizedBox(
+          height:25,
+        ),
+        Center(
+          child: RaisedButton(
+            color:Colors.green,
+            shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10)
+            ),
+            child:Text("Get",
+              style: TextStyle(
+                  fontSize:23,
+                  color: Colors.white,
+                  fontFamily:'Inconsolata'
+              ),),
+            onPressed:() async{
+
+              // Platform messages may fail, so we use a try/catch PlatformException.
+
+              setState(() {
+
+                _ipAddress = _wifiObject.ipAddress.toString();
+                _routerIp = _wifiObject.routerIp.toString();
+                _macAddress = _wifiObject.macAddress.toString();
+                _dns1 = _wifiObject.dns1.toString();
+                _dns2 = _wifiObject.dns2.toString();
+                _ssid = _wifiObject.ssid.toString();
+                _frequency = _wifiObject.frequency.toString();
+                _connectionType = _wifiObject.connectionType.toString();
+                _bssid = _wifiObject.bssId.toString();
+                _linkspeed = _wifiObject.linkSpeed.toString();
+
+              });
+            }
+            ,
+          ),
+        )
+        ],
       ),
     );
   }
